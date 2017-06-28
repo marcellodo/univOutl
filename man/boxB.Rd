@@ -33,7 +33,7 @@ Optional vector with identifiers of units in \code{x}. If missing (\code{id=NULL
 Values of \code{x} that will be excluded by the analysis. By default missing values are excluded (\code{exclude=NA}). 
 }
   \item{logt}{
-Logical, if \code{TRUE}, before searching outliers the \code{x} variable is log-transformed (\code{log(x+1)} is considered). Note that this case the summary output (bounds, etc.) will refer to the log-transformed \code{x}
+Logical, if \code{TRUE}, before searching outliers the \code{x} variable is log-transformed (\code{log(x+1)} is considered). In this case the summary outputs (bounds, etc.) will refer to the log-transformed \code{x}
 }
 
 }
@@ -58,7 +58,7 @@ Where M is the medcouple; when \eqn{M > 0}{M>0} (positive skewness) then \eqn{a 
 
 When weights are available (passed via the argument \code{weights}) then they are used in the computation of the quartiles. In particular, the quartiles are derived using the function  \code{\link[Hmisc]{wtd.quantile}} in the package \pkg{Hmisc}.  
 
-Remember that when the asking a log transformation (argument \code{logt=TRUE}) all the estimates (quartiles, etc.) will refer to \eqn{log(x+1)}{log(x+1)}.
+Remember that when asking a log transformation (argument \code{logt=TRUE}) all the estimates (quartiles, etc.) will refer to \eqn{log(x+1)}{log(x+1)}.
 
 }
 
@@ -95,7 +95,7 @@ Marcello D'Orazio \email{mdo.statmatch@gmail.com}
 
 
 \seealso{
-\code{link[robustbase]{adjboxStats}}, \code{link[Hmisc]{wtd.quantile}} 
+\code{\link[robustbase]{adjboxStats}}, \code{\link[Hmisc]{wtd.quantile}} 
 }
 \examples{
 

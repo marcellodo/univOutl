@@ -50,7 +50,7 @@ At first the ratios are centered around their median \eqn{r_M}{r_M}:
 
 \deqn{s_i = 1 - r_M/r_i \qquad \mbox{if} \qquad 0 < r_i < r_M}{s_i = 1 - r_M/r_i  if  0 < r_i < r_M}
 
-\deqn{s_i = 1 - r_i/r_M  \qquad \mbox{if} \qquad r_i \geq r_M}{s_i = 1 - r_i/r_M  if  r_i >= r_M}
+\deqn{s_i = r_i/r_M - 1  \qquad \mbox{if} \qquad r_i \geq r_M}{s_i = r_i/r_M - 1  if  r_i >= r_M}
 
 Then, in order to account for the magnitude of data, the following score is derived:
 

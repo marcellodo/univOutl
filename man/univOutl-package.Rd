@@ -6,12 +6,12 @@
 Detection of Univariate Outliers.
 }
 \description{
-Well known outlier detection techniques in the univariate case. Ratios of two variables are covered too.
+Well known outlier detection techniques in the univariate case. Ratios of two variables are covered too. When available, survey weights can be considered.
 }
 \details{
 The package provides few simple functions implementing well known outlier detection techniques in the univariate case. 
 Methods to deal with skewed distribution are included.
-The Hidiroglou-Berthelot (1986) method to search for outliers in ratios of historical data is implemented as well.
+The Hidiroglou-Berthelot (1986) method to search for outliers in ratios of historical data is implemented as well. When available, survey weights can be used in outliers detection.
 }
 \author{
 Author and Maintainer: Marcello D'Orazio \email{mdo.statmatch@gmail.com}

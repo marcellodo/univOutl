@@ -39,7 +39,7 @@ LocScaleB(x, k=3, method='MAD',  weights=NULL, id=NULL,
 }
 
   \item{weights}{
-		Optional numeric vector that provides weights associated to observations. Only nonnegative weights  are allowed. Note that weights can only be used when \code{method=`MAD'}, \code{method=`IQR'} or \code{method=`dQ'}.
+		Optional numeric vector that provides weights associated to observations. Only nonnegative weights  are allowed. Note that weights can only be used when \code{method='MAD'}, \code{method='IQR'} or \code{method='dQ'}.
 }
   \item{id}{
 Optional numeric or character vector, with identifiers of units in \code{x}. If \code{id=NULL} (deafult) units' identifiers will be set equal to their position in \code{x}.
@@ -75,9 +75,9 @@ With \code{method='AdjOut'} the following estimates are considered:
 
 being \eqn{f_R}{fR} and \eqn{f_L}{fL} derived starting from the fences of the adjusted boxplot (Hubert and Vandervieren, 2008; see \code{\link[robustbase]{adjboxStats}}). 
 
-When weights are available (passed via the argument \code{weights}) then they are used in the computation of the quartiles. In particular, the quartiles are derived using the function  \code{\link[Hmisc]{wtd.quantile}} in the package \pkg{Hmisc}. Note that their use is allowed just with \code{method = 'IQR'}, \code{method = 'dQ'} or \code{method = 'AdjOut'}.
+When weights are available (passed via the argument \code{weights}) then they are used in the computation of the quartiles. In particular, the quartiles are derived using the function  \code{\link[Hmisc]{wtd.quantile}} in the package \pkg{Hmisc}. Note that their use is allowed just with \code{method='IQR'}, \code{method='dQ'} or \code{method='AdjOut'}.
 
-The 'score' variable reported in the the \code{data} dataframe when \code{return.dataframe=TRUE} is the standardized score derived as (x - Median)/scale.  
+The `score' variable reported in the the \code{data} dataframe when \code{return.dataframe=TRUE} is the standardized score derived as (x - Median)/scale.  
 }
 
 \value{
