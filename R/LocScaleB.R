@@ -29,7 +29,9 @@ LocScaleB <- function(x, k=3, method='MAD',  weights=NULL, id=NULL,
     # computes quantiles
     if(is.null(weights)) qq <- quantile(x=yy, probs=c(0.25, 0.50, 0.75))
     else qq <- Hmisc::wtd.quantile(x=yy, weights=ww, probs=c(0.25, 0.50, 0.75))
-
+    
+    if(all(abs(qq)<1e-06)) stop("Quartiles are all equal to 0")
+    
     # estimates scale measure
     if(tolower(method) == 'iqr'){
         ddl <- ddr <- (qq[3] - qq[1])/1.3490
@@ -93,6 +95,17 @@ LocScaleB <- function(x, k=3, method='MAD',  weights=NULL, id=NULL,
         }
     }
     
+    # check ddl and ddr
+    if(ddl<=0){
+        warning("Estimated scale measure is 0 \n
+                it will be substituted with |0.05*Median|")
+        ddl <- abs(0.05 * qq[2])
+    }
+    if(ddr<=0){
+        warning("Estimated scale measure is 0 \n
+                it will be substituted with |0.05*Median|")
+        ddr <- abs(0.05 * qq[2])
+    }
     # derive score
     ee <- yy - qq[2]
     if(ddl != ddr) zz <- ee/ddl

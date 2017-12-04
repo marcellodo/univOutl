@@ -34,13 +34,19 @@ boxB <- function(x, k=1.5, method='asymmetric', weights=NULL, id=NULL,
     # identifies ranges
     if(method == 'resistant' | method == 'boxplot'){
         vql <- vqu <- qq[3] - qq[1]
+        if(abs(vql)<1e-06) warning("IQR is 0")
         low.b <- qq[1] - k*vql
         up.b <- qq[3] + k*vqu
     }
     if(method == 'asymmetric'){
         vql <- qq[2] - qq[1]
+        
+        if(abs(vql)<1e-06) warning("(Q2-Q1) = 0")
         vqu <- qq[3] - qq[2]
+        
+        if(abs(vqu)<1e-06) warning("(Q3-Q2) = 0")
         low.b <- qq[1] - 2*k*vql
+        
         up.b <- qq[3] + 2*k*vqu
     }
     if(method == 'adjbox'){

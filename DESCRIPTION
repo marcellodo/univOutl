@@ -1,8 +1,8 @@
 Package: univOutl
 Type: Package
 Title: Detection of Univariate Outliers
-Version: 0.1-3
-Date: 2017-06-09
+Version: 0.1-4
+Date: 2017-12-04
 Author: Marcello D'Orazio
 Maintainer: Marcello D'Orazio <mdo.statmatch@gmail.com>
 Depends: robustbase, Hmisc

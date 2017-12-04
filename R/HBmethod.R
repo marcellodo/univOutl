@@ -34,6 +34,8 @@ HBmethod <- function(yt1, yt2, U=0.5, A=0.05, C=4,
     
     # compute bounds for scores
     q.E <- quantile(x = E, probs = c(0.25, 0.50, 0.75))
+    if(all(abs(q.E)<1e-06)) stop("Quartiles of E scores are all equal to 0")
+    
     message('MedCouple skewness measure of E scores: ', round(robustbase::mc(E), 4))
     
     dq1 <- max( (q.E[2] - q.E[1]), abs(A * q.E[2]) )
