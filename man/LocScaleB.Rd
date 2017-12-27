@@ -122,7 +122,7 @@ Marcello D'Orazio \email{mdo.statmatch@gmail.com}
 
 
 \seealso{
-\code{\link[stats]{mad}}, \code{\link[robustbase]{scaleTau2}}, \code{\link[robustbase]{Qn}}, \code{\link[robustbase]{Sn}}
+\code{\link[stats]{mad}}, \code{\link[robustbase]{scaleTau2}}, \code{\link[robustbase]{Qn}}, \code{\link[robustbase]{Sn}, \code{\link[Hmisc]{GiniMd}}
 }
 \examples{
 
