@@ -33,6 +33,11 @@ LocScaleB <- function(x, k=3, method='MAD',  weights=NULL, id=NULL,
     if(all(abs(qq)<1e-06)) stop("Quartiles are all equal to 0")
     
     # estimates scale measure
+    if(tolower(method) == 'idr'){
+        if(is.null(weights)) qq10 <- quantile(x=yy, probs=c(0.10, 0.90))
+        else qq10 <- Hmisc::wtd.quantile(x=yy, weights=ww, probs=c(0.10, 0.90))
+        ddl <- ddr <- (qq10[2] - qq10[1])/2.5631
+    }
     if(tolower(method) == 'iqr'){
         ddl <- ddr <- (qq[3] - qq[1])/1.3490
     }
@@ -108,7 +113,7 @@ LocScaleB <- function(x, k=3, method='MAD',  weights=NULL, id=NULL,
     }
     # derive score
     ee <- yy - qq[2]
-    if(ddl != ddr) zz <- ee/ddl
+    if(ddl == ddr) zz <- ee/ddl
     else zz <- ifelse(yy < qq[2], ee/ddl, ee/ddr)
     
     # derives bounds
@@ -118,12 +123,15 @@ LocScaleB <- function(x, k=3, method='MAD',  weights=NULL, id=NULL,
     names(up.b) <- 'up'
     
     # identifies outliers
-    # outl <- (yy < low.b) | (yy > up.b)
-    outl <- (zz < -k) | (zz > k)
-    if(sum(outl)==0) warning('No outliers found')
+    outl <- (yy < low.b) | (yy > up.b)
+    # outl <- (zz < -k) | (zz > k)
+    if(sum(outl)==0) message('No outliers found')
     else{
-        message('No. of outliers in left tail: ', sum(zz < -k))
-        message('No. of outliers in right tail: ', sum(zz > k), '\n')
+        # message('No. of outliers in left tail: ', sum(zz < -k))
+        # message('No. of outliers in right tail: ', sum(zz > k), '\n')
+        message('No. of outliers in left tail: ', sum(yy < low.b))
+        message('No. of outliers in right tail: ', sum(yy > up.b), '\n')
+        
     }
         
     # output
