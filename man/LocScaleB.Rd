@@ -28,6 +28,8 @@ LocScaleB(x, k=3, method='MAD',  weights=NULL, id=NULL,
   	   \code{method='IDR'} for using the Inter-Decile Range; i.e. Q90-Q10 
 		 		   	   
 		\code{method='MAD'} for using the Median Absolute Deviation;
+
+		\code{method='Gini'} robust scle measure based on Gini's Mean Difference (see  \code{\link[Hmisc]{GiniMd}}); 
 		
 		\code{method='ScaleTau2'} robust tau-estimate of univariate scale, as proposed by Maronna and Zamar (2002) (see also\code{\link[robustbase]{scaleTau2}}); 
 		

@@ -75,6 +75,14 @@ LocScaleB <- function(x, k=3, method='MAD',  weights=NULL, id=NULL,
             ddl <- ddr <- Hmisc::wtd.quantile(x=zz, weights=ww, probs=0.5) * 1.4826
         }
     }
+    if(tolower(method) == 'gini'){
+        if(is.null(weights)){
+            ddl <- ddr <- Hmisc::GiniMd(yy) / 2 * sqrt(pi)
+        }
+        else{
+            stop('Weights cannot be used when computing Gini Mean Difference')
+        }
+    }
     if(tolower(method) == 'scaletau2'){
         if(is.null(weights)){
             ddl <- ddr <- robustbase::scaleTau2(yy)

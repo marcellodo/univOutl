@@ -1,0 +1,2 @@
+0.1-4 	Corrected a bug in LocScaleB when computing score.
+	In LocScaleB added possibility of estimating scale by means of Inter-Decile Range (method="IDR") or based on Gini's meadn differrence
