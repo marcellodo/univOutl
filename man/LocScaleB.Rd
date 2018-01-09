@@ -29,7 +29,7 @@ LocScaleB(x, k=3, method='MAD',  weights=NULL, id=NULL,
 		 		   	   
 		\code{method='MAD'} for using the Median Absolute Deviation;
 
-		\code{method='Gini'} robust scle measure based on Gini's Mean Difference (see  \code{\link[Hmisc]{GiniMd}}); 
+		\code{method='Gini'} robust scale estimate based on Gini's Mean Difference (see  \code{\link[Hmisc]{GiniMd}}); 
 		
 		\code{method='ScaleTau2'} robust tau-estimate of univariate scale, as proposed by Maronna and Zamar (2002) (see also\code{\link[robustbase]{scaleTau2}}); 
 		
@@ -122,7 +122,7 @@ Marcello D'Orazio \email{mdo.statmatch@gmail.com}
 
 
 \seealso{
-\code{\link[stats]{mad}}, \code{\link[robustbase]{scaleTau2}}, \code{\link[robustbase]{Qn}}, \code{\link[robustbase]{Sn}, \code{\link[Hmisc]{GiniMd}}
+\code{\link[stats]{mad}}, \code{\link[robustbase]{scaleTau2}}, \code{\link[robustbase]{Qn}}, \code{\link[robustbase]{Sn}}, \code{\link[Hmisc]{GiniMd}}
 }
 \examples{
 
