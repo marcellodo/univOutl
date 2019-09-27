@@ -8,7 +8,7 @@ Hidiroglou-Berthelot procedure for detecting outliers with periodic data
 This function implements the method proposed by Hidiroglou and Berthelot (1986) to identify outliers in periodic data, i.e. when the same variable is measured at two time points.
 }
 \usage{
-HBmethod(yt1, yt2, U=0.5, A=0.05, C=4, 
+HBmethod(yt1, yt2, U=0.5, A=0.05, C=4, pct=0.25,
          id=NULL, std.score=FALSE, return.dataframe=FALSE)
 
 }
@@ -28,7 +28,10 @@ Numeric, parameter needed to determine the `importance' of a ratio. The value sh
 Numeric, parameter needed when computing the scale measure used to derive the bounds. Hidiroglou and Berthelot (1986) suggest setting \eqn{A = 0.05}{A = 0.05} (default) (see Details for further information).
 }
   \item{C}{
-Numeric, parameter determining the extension of the interval (greater values will provide larger intervals, i.e. fewer expected outliers). Values commonly used are 4 (default) or 7, but also values close or grater than 40 can be used in some particular cases. Note that two C values can be provided instead of one, the first one will be used to determine the left tail bound, while the second determines the right tail bound; this setting can help in improving outlier detection in skewed distributions (see Details for further information).
+Numeric, parameter determining the extension of the interval; greater values will provide larger intervals, i.e. fewer expected outliers. Values commonly used are 4 (default) or 7, but also values close or grater than 40 can be used in some particular cases. Note that two C values can be provided instead of one, the first one will be used to determine the left tail bound, while the second determines the right tail bound; this setting can help in improving outlier detection in skewed distributions (see Details for further information).
+}
+  \item{pct}{
+Numeric, the percentage point of the scores that will be used to calculate the lower and upper bounds. By default, \code{pct = 0.25}, i.e. quartiles Q1 and Q3 are considered. In some cases, as suggested by Hidiroglou and Emond (2018), using \code{pct = 0.10}, i.e. percentiles P10 and P90, may be a better choice. Se Details for further information.   
 }
   \item{id}{
 Optional numeric or character vector, with identifiers of units. If \code{id=NULL} units identifiers will be set equal to their position.
@@ -38,7 +41,7 @@ Optional numeric or character vector, with identifiers of units. If \code{id=NUL
 Logical, if \code{TRUE} the output will include a standardized score variable (see Details, for further information)
 }
   \item{return.dataframe}{
-Logical, if \code{TRUE} the output will save all the relevant information for outlier detection in a dataframe with the following columns: 'id' (units' identifiers), `yt1', `yt2', `ratio' (= yt1/yt2), `Escore' (the E scores, see Details), `std.Escore' (the standardized E scores when \code{std.score=TRUE}, see Details) and finally `outliers', where value 1 indicates observations detected as an outlier, 0 otherwise.  
+Logical, if \code{TRUE} the output will save all the relevant information for outlier detection in a dataframe with the following columns: 'id' (units' identifiers), `yt1', `yt2', `ratio' (= yt1/yt2), `sizeU' (=max(yt1, yt2)^U),`Escore' (the E scores, see Details), `std.Escore' (the standardized E scores when \code{std.score=TRUE}, see Details) and finally `outliers', where value 1 indicates observations detected as an outlier, 0 otherwise.  
 }
 
 }
@@ -64,17 +67,18 @@ where
 
 \eqn{d_{Q1} = max( E_M - E_{Q1}, |A \times E_M| ) }{max( E_M - E_{Q1}, |A*E_M| )} and \eqn{d_{Q3} = max( E_{Q3} - E_M, |A \times E_M| ) }{max( E_{Q3} - E_M, |A*E_M| )}
 
-being \eqn{d_{Q1}}{d_Q1}, \eqn{E_M}{E_M} and \eqn{d_{Q3}}{d_Q3} the quartiles of E scores.
-
+being \eqn{d_{Q1}}{d_Q1}, \eqn{E_M}{E_M} and \eqn{d_{Q3}}{d_Q3} the quartiles of E scores when \code{pct = 0.25} (default).
+ Recently Hidiroglou and Emond (2018) suggest using percentiles P1 and P10 of the E scores in replacement of respectively Q1 and Q3  to avoid the drawback of many units identified as outliers; this is likely to occur when a large proportion of units (>1/4) has the same ratio. P1 and P10 are achieved by setting \code{pct = 0.10} when running the function. 
+ 
 In practice, all the units with an E score outside the interval are considered as outliers. Notice that when two \code{C} values are provided, then the first is used to derive the left bound while the second determines the right bound.
 
 When \code{std.score=TRUE} a standardized score is derived in the following manner:
 
-\deqn{z_{E,i} = 0.6745 \times \frac{E_i - E_M}{d_{Q1}} \qquad \mbox{if} \qquad  E_i < E_M}{z_E,i = 0.6745*(E_i - E_M)/d_{Q1}  if  E_i < E_M}
+\deqn{z_{E,i} = g \times \frac{E_i - E_M}{d_{Q1}} \qquad \mbox{if} \qquad  E_i < E_M}{z_E,i = g*(E_i - E_M)/d_{Q1}  if  E_i < E_M}
 
-\deqn{z_{E,i} = 0.6745 \times \frac{E_i - E_M}{d_{Q3}} \qquad \mbox{if} \qquad  E_i \geq E_M}{z_E,i = 0.6745*(E_i - E_M)/d_{Q3}  if  E_i >= E_M}
+\deqn{z_{E,i} = g \times \frac{E_i - E_M}{d_{Q3}} \qquad \mbox{if} \qquad  E_i \geq E_M}{z_E,i = g*(E_i - E_M)/d_{Q3}  if  E_i >= E_M}
 
-The constant 0.6745 makes \eqn{d_{Q1}}{d_{Q1}} and  \eqn{d_{Q3}}{d_{Q3}} approximately unbiased estimators when the E scores follow the normal distribution.
+The constant g is set equal to \code{qnorm(1-pct)} and  makes \eqn{d_{Q1}}{d_{Q1}} and  \eqn{d_{Q3}}{d_{Q3}} approximately unbiased estimators when the E scores follow the normal distribution.
 
 }
 
@@ -97,16 +101,23 @@ When \code{return.dataframe=TRUE}, the first three components remain the same wi
 	A dataframe with the subset of observations excluded. The data frame has the following columns: 'id' (units' identifiers), 'yt1' columns 'yt2'}
 
 \item{data}{
-	A dataframe with the the not excluded observations and the following columns: `id' (units' identifiers), `yt1', `yt2', `ratio' (= yt1/yt2), `Escore' (the E scores, see Details), `std.Escore' (the standardized E scores when \code{std.score=TRUE}, see Details) and finally `outliers', where value 1 indicates observations detected as an outlier, 0 otherwise.  
+	A dataframe with the the not excluded observations and the following columns: `id' (units' identifiers), `yt1', `yt2', `ratio' (= yt1/yt2), `sizeU' (=max(yt1, yt2)^U),`Escore' (the E scores, see Details), `std.Escore' (the standardized E scores when \code{std.score=TRUE}, see Details) and finally `outliers', where value 1 indicates observations detected as an outlier, 0 otherwise.  
 }
 
 }
 
 \references{
 Hidiroglou, M.A. and Berthelot, J.-M. (1986) `Statistical editing and Imputation for Periodic Business Surveys'. \emph{Survey Methodology}, Vol 12, pp. 73-83.
+
+Hidiroglou, M.A. and Emond, N. (2018) `Modifying the Hidiroglou-Berthelot (HB) method'. \emph{Unpublished note}, Business Survey Methods Division, Statistics Canada, May 18 2018.
+
 }
 \author{
 Marcello D'Orazio \email{mdo.statmatch@gmail.com}
+}
+
+\seealso{
+\code{\link[univOutl]{plot4ratios}}, \code{\link[univOutl]{ratioSize}}
 }
 
 \examples{

@@ -23,9 +23,9 @@ LocScaleB(x, k=3, method='MAD',  weights=NULL, id=NULL,
   \item{method}{
 		character identifying how to estimate the scale of the distribution. Available choices are:
 		
-   	   \code{method='IQR'} for using the Inter-Quartile Range, i.e. Q75-Q25; 
+   	   \code{method='IQR'} for using the Inter-Quartile Range, i.e. P75-P25; 
  
-  	   \code{method='IDR'} for using the Inter-Decile Range; i.e. Q90-Q10 
+  	   \code{method='IDR'} for using the Inter-Decile Range; i.e. P90-P10 
 		 		   	   
 		\code{method='MAD'} for using the Median Absolute Deviation;
 
@@ -43,7 +43,7 @@ LocScaleB(x, k=3, method='MAD',  weights=NULL, id=NULL,
 }
 
   \item{weights}{
-		Optional numeric vector that provides weights associated to observations. Only nonnegative weights  are allowed. Note that weights can only be used when \code{method='MAD'}, \code{method='IQR'} or \code{method='dQ'}.
+		Optional numeric vector that provides weights associated to observations. Only nonnegative weights  are allowed. Note that weights can only be used when \code{method='MAD'}, \code{method='IQR'},  \code{method='IDR'} or \code{method='dQ'}.
 }
   \item{id}{
 Optional numeric or character vector, with identifiers of units in \code{x}. If \code{id=NULL} (deafult) units' identifiers will be set equal to their position in \code{x}.
@@ -78,7 +78,7 @@ With \code{method='AdjOut'} the following estimates are considered:
 
 being \eqn{f_R}{fR} and \eqn{f_L}{fL} derived starting from the fences of the adjusted boxplot (Hubert and Vandervieren, 2008; see \code{\link[robustbase]{adjboxStats}}). 
 
-When weights are available (passed via the argument \code{weights}) then they are used in the computation of the quartiles. In particular, the quartiles are derived using the function  \code{\link[Hmisc]{wtd.quantile}} in the package \pkg{Hmisc}. Note that their use is allowed just with \code{method='IQR'}, \code{method='dQ'} or \code{method='AdjOut'}.
+When weights are available (passed via the argument \code{weights}) then they are used in the computation of the quartiles. In particular, the quartiles are derived using the function  \code{\link[Hmisc]{wtd.quantile}} in the package \pkg{Hmisc}. Note that their use is allowed just with \code{method='IQR'},  \code{method='IDR'}, \code{method='dQ'} or \code{method='AdjOut'}.
 
 The `score' variable reported in the the \code{data} dataframe when \code{return.dataframe=TRUE} is the standardized score derived as (x - Median)/scale.  
 }
@@ -113,7 +113,7 @@ Maronna, R.A. and Zamar, R.H. (2002) `Robust estimates of location and dispersio
 
 Rousseeuw, P.J. and Croux, C. (1993) `Alternatives to the Median Absolute Deviation', \emph{Journal of the American Statistical Association} 88, pp. 1273-1283.
 
-Vanderviere, E. and Huber, M. (2008) `An Adjusted Boxplot for Skewed Distributions', \emph{Computational Statistics & Data Analysis}, 52, pp. 5186-5201
+Hubert, M., and Vandervieren, E. (2008) `An Adjusted Boxplot for Skewed Distributions', \emph{Computational Statistics & Data Analysis}, 52, pp. 5186-5201
 
 }
 \author{
