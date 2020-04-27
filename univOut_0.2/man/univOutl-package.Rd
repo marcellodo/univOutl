@@ -10,7 +10,7 @@ Well known outlier detection techniques in the univariate case. Ratios of two va
 }
 \details{
 The package provides few simple functions implementing well known outlier detection techniques in the univariate case. 
-Methods to deal with skewed distribution are included.
+Methods to deal with skewed distributions are included.
 The Hidiroglou-Berthelot (1986) method to search for outliers in ratios of historical data is implemented as well. When available, the survey weights can be used in outliers' detection.
 }
 \author{

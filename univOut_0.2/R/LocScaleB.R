@@ -26,28 +26,38 @@ LocScaleB <- function(x, k=3, method='MAD',  weights=NULL, id=NULL,
         warning('Please note that log(x+1) transformation is applied')
     }    
     
-    # computes quantiles
+    # computes quartiles
     if(is.null(weights)) qq <- quantile(x=yy, probs=c(0.25, 0.50, 0.75))
     else qq <- Hmisc::wtd.quantile(x=yy, weights=ww, probs=c(0.25, 0.50, 0.75))
     
     if(all(abs(qq)<1e-06)) stop("Quartiles are all equal to 0")
     
     # estimates scale measure
-    if(tolower(method) == 'idr'){
-        if(is.null(weights)) qq10 <- quantile(x=yy, probs=c(0.10, 0.90))
-        else qq10 <- Hmisc::wtd.quantile(x=yy, weights=ww, probs=c(0.10, 0.90))
-        ddl <- ddr <- (qq10[2] - qq10[1])/2.5631
+    if(tolower(method) == 'idr' || tolower(method) == 'dd'){
+        if(is.null(weights)) qq10 <- quantile(x=yy, probs=c(0.10, 0.5, 0.90))
+        else qq10 <- Hmisc::wtd.quantile(x=yy, weights=ww, probs=c(0.10, 0.50, 0.90))
+        
+        if(tolower(method) == 'idr') ddl <- ddr <- (qq10[3] - qq10[1])/2.5631
+        if(tolower(method) == 'dd'){
+            bow <- ((qq10[3] - qq10[2]) - (qq10[2] - qq10[1]))/(qq10[3] - qq10[1])
+            cat("Bowley's type skewness coefficient is: ", round(bow, 4), fill = TRUE)
+            ddl <- (qq10[2] - qq10[1])/1.2816
+            ddr <- (qq10[3] - qq10[2])/1.2816 
+        }
     }
     if(tolower(method) == 'iqr'){
         ddl <- ddr <- (qq[3] - qq[1])/1.3490
     }
     if(tolower(method) == 'dq'){
+        bow <- ((qq[3] - qq[2]) - (qq[2] - qq[1]))/(qq[3] - qq[1])
+        cat("Bowley's skewness coefficient is: ", round(bow, 4), fill=TRUE)
         ddl <- (qq[2] - qq[1])/0.6745
         ddr <- (qq[3] - qq[2])/0.6745 
     }
+    
     if(tolower(method) == 'adjout'){
         medc <- robustbase::mc(yy)
-        message('The MedCouple skewness measure is: ', round(medc,4))
+        message('The MedCouple skewness measure is: ', round(medc, 4))
         if(is.null(weights)){
             aa <- robustbase::adjboxStats(x=yy)
             low <- aa$fence[1]
