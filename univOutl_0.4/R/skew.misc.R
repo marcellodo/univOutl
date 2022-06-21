@@ -17,7 +17,8 @@ skew.misc <- function(x, weights=NULL){
     names(out) <- c("Bowley.Q", "g.Q", "Bowley.P", "g.P")
     
     # medcouple
-    medc <- robustbase::mc(y)
+    if(inherits( try( robustbase::mc(y), silent=TRUE),  "try-error")) medc <- robustbase::mc(y, doScale = TRUE)
+    else medc <- robustbase::mc(y, doScale = FALSE)
     
     #pearson 
     m <- length(y)

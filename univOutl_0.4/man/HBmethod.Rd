@@ -70,7 +70,7 @@ where
 
 \eqn{d_{Q1} = max( E_M - E_{Q1}, |A \times E_M| ) }{max( E_M - E_{Q1}, |A*E_M| )} and \eqn{d_{Q3} = max( E_{Q3} - E_M, |A \times E_M| ) }{max( E_{Q3} - E_M, |A*E_M| )}
 
-being \eqn{d_{Q1}}{d_Q1}, \eqn{E_M}{E_M} and \eqn{d_{Q3}}{d_Q3} the quartiles of E scores when \code{pct = 0.25} (default).
+being \eqn{E_{Q1}}{E_Q1}, \eqn{E_M}{E_M} and \eqn{E_{Q3}}{E_Q3} the quartiles of the E scores (when \code{pct = 0.25}, default)).
  Recently Hidiroglou and Emond (2018) suggest using percentiles P10 and P90 of the E scores in replacement of respectively Q1 and Q3  to avoid the drawback of many units identified as outliers; this is likely to occur when a large proportion of units (>1/4) has the same ratio. P10 and P90 are achieved by setting \code{pct = 0.10} when running the function. 
  
 In practice, all the units with an E score outside the interval are considered as outliers. Notice that when two \code{C} values are provided, then the first is used to derive the left bound while the second determines the right bound.

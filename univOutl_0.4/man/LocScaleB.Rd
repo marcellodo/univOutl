@@ -102,6 +102,13 @@ A list whose components depend on the \code{return.dataframe} argument. When \co
 \item{outliers}{
 	The position or identifiers of \code{x} values detected as outliers (outside bounds).
 }
+\item{lowOutl}{
+The identifiers or positions (when \code{id=NULL}) of units in \code{x} detected as outliers in the lower tail of the distribution.
+}
+\item{upOutl}{
+The identifiers or positions (when \code{id=NULL}) of units in \code{x} detected as outliers in the upper tail of the distribution.
+}
+
 
 When \code{return.dataframe=TRUE} the latter two components are substituted with two dataframes:
 

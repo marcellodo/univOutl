@@ -1,3 +1,11 @@
+0.4	Updated the plot4sizes() function and the corresponding output. Updated code that depends on 
+	functions from the package robustBase because starting from robustbase v0.95-0 (2022-04-02, svn r894) 
+	"mc() now by default uses doScale=FALSE in order to guarantee convergence also in extreme cases when
+	used together with new c.huberize = 1e11. Both are not back compatible " 
+
+0.3	Slight modification of boxB and LocScaleB to return the outliers by tail of the distribution (thanks to Eliot McGinnis
+        for suggesting the improvement and the modified code) 
+
 0.2	Added a new function skew.misc() to calculate skewness measures.
 	Added possibility in HBmethod() to detect outliers in Escores using boxplot adjusted for skewness
 	Added new method in LocScaleB() to account for slightly skewed distributions

@@ -25,26 +25,28 @@ plot4ratios <- function(out){
         rr <- dd$c.ratio
         Ls <- rep(low.b, nrow(dd))
         Us <- rep(up.b, nrow(dd))
-        lab <- "cent. ratios"
+        lab <- "centered Ratios"
     }
-    
+    # reorder units
+    mat <- data.frame(id=dd$id, x=dd$sizeU, y=rr, yLow=Ls, yUp=Us, outl=dd$outliers)
+    mat <- mat[order(mat$x), ]
     
     # draw scatterplot and bounds
-    plot(x=dd$sizeU, y=rr, type="n", 
+    plot(x=mat$x, y=mat$y, type="n", 
          ylab = lab, xlab = "sizeU",main=paste(lab, "SizeU", sep=" Vs. "),
-         ylim=c(min(c(dd$ratio, Ls)),max(c(dd$ratio,Us))))
+         ylim=c(min(c(mat$x, mat$yLow))-5, max(c(mat$x, mat$yUp))))
     
-    lines(x=dd$sizeU, y=Ls, col=4, lty=1, lwd=1.5)
-    lines(x=dd$sizeU, y=Us, col=4, lty=1, lwd=1.5)
     
-    tst <- dd$outliers==1
+    tst <- mat$outl==1
     
-    points(x=dd$sizeU[tst], y=rr[tst], pch=18, col=2, cex=1.5)
-    points(x=dd$sizeU[!tst], y=rr[!tst], pch=16, col=3)
-    text(x=dd$sizeU[tst], y=rr[tst], labels = dd$id[tst], 
-         pos=1, cex=1, col=2)
+    points(x=mat$x[tst],  y=mat$y[tst],  pch=18, col=2)
+    points(x=mat$x[!tst], y=mat$y[!tst], pch=16, col=3)
+    text(x=mat$x[tst], y=mat$y[tst], labels = mat$id[tst], 
+         pos=1, cex=0.7, col=2)
+    lines(x=mat$x, y=mat$yLow, col=4, lty=1, lwd=1.5)
+    lines(x=mat$x, y=mat$yUp, col=4, lty=1, lwd=1.5)
     #legend("left", c("Outlier", "Not Outlier"), pch=c(18,16), col=c(2,3) )
     grid()
-    list(x=dd$sizeU, y=dd$ratio, y.low=Ls, y.up=Us)       
-    
+    colnames(mat) <- c("id", gsub(pattern = " ", replacement = ".", lab), "size","yLow", "yUp", "outlier")       
+    mat
 }

@@ -56,10 +56,15 @@ LocScaleB <- function(x, k=3, method='MAD',  weights=NULL, id=NULL,
     }
     
     if(tolower(method) == 'adjout'){
-        medc <- robustbase::mc(yy)
+        
+        ck <- inherits( try( robustbase::mc(yy), silent=TRUE),  "try-error") 
+        if(ck) medc <- robustbase::mc(yy, doScale = TRUE)
+        else medc <- robustbase::mc(yy, doScale = FALSE)
         message('The MedCouple skewness measure is: ', round(medc, 4))
+        
         if(is.null(weights)){
-            aa <- robustbase::adjboxStats(x=yy)
+            if(ck) aa <- robustbase::adjboxStats(x=yy, doScale = TRUE)
+            else aa <- robustbase::adjboxStats(x=yy, doScale = FALSE)
             low <- aa$fence[1]
             up <- aa$fence[2]    
         }
@@ -142,6 +147,10 @@ LocScaleB <- function(x, k=3, method='MAD',  weights=NULL, id=NULL,
     
     # identifies outliers
     outl <- (yy < low.b) | (yy > up.b)
+    ###### distinction between outliers according to the tail
+    lower <- (yy < low.b)
+    upper <- (yy > up.b)
+    ####
     # outl <- (zz < -k) | (zz > k)
     if(sum(outl)==0) message('No outliers found')
     else{
@@ -180,7 +189,8 @@ LocScaleB <- function(x, k=3, method='MAD',  weights=NULL, id=NULL,
             fine1 <- list(excluded=to.check, outliers=integer(0)) 
         }
         else{
-            fine1 <- list(excluded=to.check, outliers=lab[outl]) 
+            fine1 <- list(excluded=to.check, outliers=lab[outl], 
+                          lowOutl=lab[lower], upOutl=lab[upper]) 
         }    
     } 
     c(fine0, fine1)

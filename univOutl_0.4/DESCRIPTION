@@ -1,8 +1,7 @@
 Package: univOutl
 Type: Package
 Title: Detection of Univariate Outliers
-Version: 0.2
-Date: 2020-04-27
+Version: 0.4
 Author: Marcello D'Orazio
 Maintainer: Marcello D'Orazio <mdo.statmatch@gmail.com>
 Depends: robustbase, Hmisc
@@ -10,6 +9,6 @@ Description: Well known outlier detection techniques in the univariate case. Met
 License: GPL (>= 2)
 URL: https://github.com/marcellodo/univOutl
 NeedsCompilation: no
-Packaged: 2020-04-27 17:08:57 UTC; pc
+Packaged: 2022-05-31 05:51:24 UTC; pc
 Repository: CRAN
-Date/Publication: 2020-04-27 17:40:02 UTC
+Date/Publication: 2022-05-31 06:20:02 UTC

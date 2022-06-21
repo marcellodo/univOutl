@@ -22,7 +22,7 @@ This function draws a scatter-plot. With the output of \code{HBmethod} the ratio
 }
 
 \value{
-A scatter-plot is drawn and, in addition, the output includes a list with the needed data, i.e. the ratios (or centered ratios) (\code{y}), the importance measure (\code{x}) and the lower and upper bounds, respectively (\code{y.low} and \code{y.up})
+A scatter-plot is drawn and, in addition, the output includes a data.frame with the data used to derive the plot.
 }
  
 \references{

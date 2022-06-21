@@ -51,11 +51,16 @@ boxB <- function(x, k=1.5, method='asymmetric', weights=NULL, id=NULL,
     }
     if(method == 'adjbox'){
         warning("With method='adjbox' the argument k is set equal to 1.5")
-        medc <- robustbase::mc(yy)
+        ck <- inherits( try( robustbase::mc(yy), silent=TRUE),  "try-error") 
+        if(ck) medc <- robustbase::mc(yy, doScale = TRUE)
+        else medc <- robustbase::mc(yy, doScale = FALSE)
+        
+        # medc <- robustbase::mc(yy)
         message('The MedCouple skewness measure is: ', round(medc, 4))
         
         if(is.null(weights)){
-            aa <- robustbase::adjboxStats(x=yy)
+            if(ck) aa <- robustbase::adjboxStats(x=yy, doScale = TRUE)
+            else aa <- robustbase::adjboxStats(x=yy, doScale = FALSE)
             low.b <- aa$fence[1]
             up.b <- aa$fence[2]    
         }
@@ -73,6 +78,11 @@ boxB <- function(x, k=1.5, method='asymmetric', weights=NULL, id=NULL,
     names(low.b) <- 'low'
     names(up.b) <- 'up'
     outl <- (yy < low.b) | (yy > up.b)
+    ###### distinction between outliers according to the tail
+    lower <- (yy < low.b)
+    upper <- (yy > up.b)
+    ####
+    
     if(sum(outl)==0) message('No outliers found')
     else{
         message('No. of outliers in left tail: ', sum(yy < low.b))
@@ -88,7 +98,8 @@ boxB <- function(x, k=1.5, method='asymmetric', weights=NULL, id=NULL,
     }
     else{
         fine <- list(quartiles=qq, fences=fences,
-                     excluded=to.check, outliers=lab[outl])
+                     excluded=to.check, outliers=lab[outl],
+                     lowOutl=lab[lower], upOutl=lab[upper])
     }
     fine
 }

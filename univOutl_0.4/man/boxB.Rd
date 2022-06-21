@@ -81,6 +81,13 @@ The bounds of the interval, values outside the interval are detected as outliers
 The identifiers or positions (when \code{id=NULL}) of units in \code{x} detected as outliers.
 }
 
+\item{lowOutl}{
+The identifiers or positions (when \code{id=NULL}) of units in \code{x} detected as outliers in the lower tail of the distribution.
+}
+
+\item{upOutl}{
+The identifiers or positions (when \code{id=NULL}) of units in \code{x} detected as outliers in the upper tail of the distribution.
+}
 
 }
 \references{
