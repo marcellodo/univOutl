@@ -17,11 +17,11 @@ boxB(x, k=1.5, method='asymmetric', weights=NULL, id=NULL,
 		Numeric vector that will be searched for outliers. 
 }
   \item{k}{
-	Nonnegative constant that determines the extension of the 'whiskers'. Commonly used values are 1.5 (default), 2, or 3.
-Note that when \code{method="adjbox"} then \code{k} is set automatically equal to 1.5
+	Nonnegative constant that determines the extension of the 'whiskers'. Commonly used values are 1.5 (default, inner fence), or 3 (outer fence, rarely used).
+Note that when \code{method="adjbox"} or \code{method="asymmetric2"} then \code{k} is set automatically equal to 1.5
 }
   \item{method}{
-		Character, identifies the method to be used: \code{method="resistant"} provides the `standard' boxplot fences; \code{method="asymmetric"} is a modification of standard method to deal with (moderately) skewed data; \code{method="adjbox"} uses Hubert and Vandervieren (2008) adjusted boxplot for skewed distributions.
+		Character, identifies the method to be used: \code{method="resistant"} provides the `standard' boxplot fences; \code{method="asymmetric"} is a modification of standard method (Kimber, 1990) to deal with (moderately) skewed data; \code{method="asymmetric2"} is the modification proposed by Walker et al (2018) to deal with asymmetric distributions;\code{method="adjbox"} uses Hubert and Vandervieren (2008) adjusted boxplot for skewed distributions.
 }
   \item{weights}{
 		Optional numeric vector with units' weights associated to the observations in \code{x}. Only nonnegative weights are allowed. Weights are used in estimating the quartiles (see Details).
@@ -50,6 +50,12 @@ When \code{method="asymmetric"} the outlying observations are those outside the 
 
 being \eqn{Q_2}{Q2} the median; such a modification allows to account for slight skewness of the distribution. 
 
+When \code{method="asymmetric2"} the outlying observations are identified using the Walker et al (2018) modified boxplot: 
+
+\deqn{[Q_1 - 1.5 \times IQR \times \frac{(1-B)}{(1+B)};\quad  Q_3 + 1.5 \times IQR \times \frac{(1+B)}{(1-B)}] }{[Q1 - 1.5*IQR*(1-B)/(1+B); Q3 + 1.5*IQR*(1+B)/(1-B)]}
+
+being B the Bowley's skewness coefficient (see \code{\link[univOutl]{skew.misc}}).
+
 Finally, when \code{method="adjbox"} the outlying observations are identified using the method proposed by Hubert and Vandervieren (2008) and based on the Medcouple measure of skewness; in practice the bounds are: 
 
 \deqn{[Q_1-1.5 \times e^{aM} \times IQR;\quad  Q_3+1.5 \times e^{bM}\times IQR ]}{[Q1 - 1.5*exp(a*M)*IQR; Q3 + 1.5*exp(b*M)*IQR]}
@@ -66,7 +72,7 @@ Remember that when asking a log transformation (argument \code{logt=TRUE}) all t
 The output is a list containing the following components:
 
 \item{quartiles}{
-The quartiles of \code{x} after discarding the values in the \code{exclude} argument. When weights are provided they are used in quartiles estimation trough the function  \code{\link[Hmisc]{wtd.quantile}} in the package \pkg{Hmisc}.
+The quartiles of \code{x} after discarding the values in the \code{exclude} argument. When weights are provided they are used in quartiles estimation through the function  \code{\link[Hmisc]{wtd.quantile}} in the package \pkg{Hmisc}.
 }
 
 \item{fences}{
@@ -95,6 +101,8 @@ McGill, R., Tukey, J. W. and Larsen, W. A. (1978) `Variations of box plots'. \em
 
 Hubert, M., and Vandervieren, E. (2008) `An Adjusted Boxplot for Skewed Distributions', \emph{Computational Statistics and Data Analysis}, 52, pp. 5186-5201.
 
+Walker, M.L., Dovoedo, Y.H., Chakraborti, S., and Hilton, C.W. (2018) `An Improved Boxplot for Univariate Data'. \emph{The American Statistician}, 72, pp. 348-353
+
 }
 \author{
 Marcello D'Orazio \email{mdo.statmatch@gmail.com}
@@ -102,7 +110,7 @@ Marcello D'Orazio \email{mdo.statmatch@gmail.com}
 
 
 \seealso{
-\code{\link[robustbase]{adjboxStats}}, \code{\link[Hmisc]{wtd.quantile}} 
+\code{\link[robustbase]{adjboxStats}}, \code{\link[Hmisc]{wtd.quantile}}, \code{\link[univOutl]{skew.misc}} 
 }
 \examples{
 
@@ -112,6 +120,11 @@ x[10] <- 1
 x[20] <- 100
 
 out <- boxB(x = x, k = 1.5, method = 'asymmetric')
+out$fences
+out$outliers
+x[out$outliers]
+
+out <- boxB(x = x, k = 1.5, method = 'asymmetric2')
 out$fences
 out$outliers
 x[out$outliers]

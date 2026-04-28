@@ -38,7 +38,10 @@ boxB <- function(x, k=1.5, method='asymmetric', weights=NULL, id=NULL,
         low.b <- qq[1] - k*vql
         up.b <- qq[3] + k*vqu
     }
-    if(method == 'asymmetric'){
+    if(method == 'asymmetric'){ # Kimber's Boxplot
+        warning("With method='asymmetric' (Kimber's boxplot) \n
+                the argument k is set equal to 1.5")
+        k <- 1.5
         vql <- qq[2] - qq[1]
         
         if(abs(vql)<1e-06) warning("(Q2-Q1) = 0")
@@ -49,13 +52,34 @@ boxB <- function(x, k=1.5, method='asymmetric', weights=NULL, id=NULL,
         
         up.b <- qq[3] + 2*k*vqu
     }
+    #-----------------------------------------------------
+    if(method == 'asymmetric2'){ # Walker et al Boxplot
+        warning("With method='asymmetric2' (Walker et al. boxplot) \n
+                the argument k is set equal to 1.5")
+        k <- 1.5
+        iqr <- qq[3] - qq[1]
+        bow <- (qq[3] + qq[1] - 2*qq[2])/iqr
+        message('The Bowley skewness measure is: ', round(bow, 4))
+        
+        vql <- iqr * (1 - bow)/(1 + bow)
+        vqu <- iqr * (1 + bow)/(1 - bow)
+        
+        low.b <- qq[1] - k * vql
+        up.b <- qq[3] + k * vqu
+    }
+    #--------------------------------------------------------
     if(method == 'adjbox'){
         warning("With method='adjbox' the argument k is set equal to 1.5")
-        medc <- robustbase::mc(yy)
+        ck <- inherits( try( robustbase::mc(yy), silent=TRUE),  "try-error") 
+        if(ck) medc <- robustbase::mc(yy, doScale = TRUE)
+        else medc <- robustbase::mc(yy, doScale = FALSE)
+        
+        # medc <- robustbase::mc(yy)
         message('The MedCouple skewness measure is: ', round(medc, 4))
         
         if(is.null(weights)){
-            aa <- robustbase::adjboxStats(x=yy)
+            if(ck) aa <- robustbase::adjboxStats(x=yy, doScale = TRUE)
+            else aa <- robustbase::adjboxStats(x=yy, doScale = FALSE)
             low.b <- aa$fence[1]
             up.b <- aa$fence[2]    
         }
@@ -70,7 +94,11 @@ boxB <- function(x, k=1.5, method='asymmetric', weights=NULL, id=NULL,
             }
         }
     }
+    #-----------------------------------------------------------
+    # output
+    low.b <- unname(low.b)
     names(low.b) <- 'low'
+    up.b <- unname(up.b)
     names(up.b) <- 'up'
     outl <- (yy < low.b) | (yy > up.b)
     ###### distinction between outliers according to the tail
