@@ -271,8 +271,11 @@ using the ratios $r_i = y_{i,t2}/y_{i,t1}$. They are initially centered
 around the median ($r_M$):
 
 $$
-s_i = \begin{cases} 1 - \dfrac{r_M}{r_i} & \text{if} \quad 0<r_i <r_M \\ 
-\dfrac{r_i}{r_M} - 1 & \text{if} \quad r_i \geq r_M \end{cases}
+s_i = 1 - \frac{r_M}{r_i} \;\; \text{if} \;\; 0<r_i <r_M 
+$$
+
+$$
+s_i=\frac{r_i}{r_M} - 1 \;\; \text{if} \;\; r_i \geq r_M
 $$
 
 and then multiplied by a factor proportional to the magnitude of the
