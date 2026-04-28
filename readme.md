@@ -1,6 +1,17 @@
 # R package univOutl
 Marcello D’Orazio
 
+# univOutl <img src="https://www.r-project.org/logo/Rlogo.png" align="right" width="80"/>
+
+> **Detection of Univariate Outliers**
+
+[![CRAN
+version](https://www.r-pkg.org/badges/version/univOutl.png)](https://CRAN.R-project.org/package=univOutl)
+[![CRAN
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/univOutl.png)](https://CRAN.R-project.org/package=univOutl)[![Mentioned
+in Awesome Official
+Statistics](https://awesome.re/mentioned-badge.svg)](http://www.awesomeofficialstatistics.org)
+
 ## 1. Introduction
 
 The [**univOutl**](https://cran.r-project.org/package=univOutl) R
