@@ -409,41 +409,22 @@ rt.out <- ratioSize(numerator = y6,
                     size = x6, U = 0.5) 
 ```
 
-    MedCouple skewness measure of centerad ratios: 0.1837
+    Bowley skewness measure of centered ratios: 0.224
+    No. of outliers in left tail: 11
+    No. of outliers in right tail: 3
 
 ``` r
 rt.out$bounds
 ```
 
-    [1] -0.5008782  1.4541716
+    [1] -0.6056772  1.3469455
 
 ``` r
 rt.out$outliers
 ```
 
-     [1] 146  53 144  18 163 170  61  38  86  30 139  32  65 110
+     [1] 53 144  18 125 163 170  61  38  86  30 139   7  65 110
 
-``` r
-# view details
-rt.out <- ratioSize(numerator = y6, 
-                    denominator = x6, 
-                    size = x6, U = 0.5, 
-                    return.dataframe = TRUE) 
-```
-
-    MedCouple skewness measure of centerad ratios: 0.1837
-
-``` r
-head(subset(rt.out$data, outliers == 1))
-```
-
-         id numerator denominator     ratio    c.ratio outliers     sizeU
-    146 146      1250       0.574  2177.700 -0.5114240        1 0.7576279
-    53   53       992       0.557  1780.969 -0.8481106        1 0.7463243
-    144 144       850       0.429  1981.352 -0.6612034        1 0.6549809
-    18   18       600       0.357  1680.672 -0.9584000        1 0.5974948
-    163 163      2700       0.249 10843.373  2.2944277        1 0.4989990
-    170 170       400       0.243  1646.091 -0.9995429        1 0.4929503
 
 The function returns centered ratios along with their corresponding
 *importance* values, enabling the identification of outliers in the
