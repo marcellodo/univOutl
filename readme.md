@@ -391,9 +391,8 @@ variable is proportional to $X$ (i.e. “size”), e.g. turnover vs. number
 of employees. The function is `ratioSize()` and it transforms the ratios
 in a similar way to the Hidiroglou-Berthelot approach. However, it is
 necessary to specify which variable denotes the “importance” of the
-ratios (the denominator or another variable). Unlike the HB method,
-outlier identification is based on an adjusted boxplot for a skewed
-distribution (Hubert & Vandervieren, 2008).
+ratios (the denominator or another variable). Outlier identification is based on methods in the `boxB()`,
+function.
 
 ``` r
 # size of rice plots in year 6
