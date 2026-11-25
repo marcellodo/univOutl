@@ -1,95 +1,90 @@
-ratioSize <- function(numerator, denominator, id=NULL,
-                      size=NULL, U=1, size.th=NULL, return.dataframe=FALSE){
+ratioSize <- function(numerator, denominator, id = NULL,
+                      size = NULL, U = 1, size.th = NULL,
+                      return.dataframe = FALSE,
+                      method = c("asymmetric2", "asymmetric", "adjbox", "resistant"),
+                      ...) {
     
-    # check lengt of vectors and identifiers
-    if(length(numerator) != length(denominator)) stop("Input vectors have different lengths")
-    if(is.null(id)) id <- 1:length(numerator)
+    method <- match.arg(method)
     
-    # discard 0s and NAs
+    # ---- input checks --------------------------------------------------------
+    n <- length(numerator)
+    if (n != length(denominator)) stop("Input vectors have different lengths")
+    if (is.null(id)) id <- seq_len(n)
+    if (length(id) != n) stop("'id' must have the same length as 'numerator'")
+    if (!is.null(size) && length(size) != n)
+        stop("'size' must have the same length as 'numerator'")
+    
+    # ---- discard NAs and zeros (NA-safe) --------------------------------------
     tst.na <- is.na(numerator) | is.na(denominator)
-    tst.0 <- (numerator==0) | (denominator==0)
-    tst <- tst.0 | tst.na
-    #message('There are ', sum(tst), ' units with NAs or 0s')
+    tst.0  <- (numerator == 0) | (denominator == 0)
+    tst.0[is.na(tst.0)] <- FALSE
+    tst  <- tst.0 | tst.na
+    keep <- !tst
     
-    if(sum(tst)==0){
-        df.no.outl <- integer(0)
-        yy0 <- denominator
-        yy1 <- numerator
-        lab <- id
+    if (!any(keep)) stop("No valid units left after removing NAs and zeros")
+    
+    yy0 <- denominator[keep]
+    yy1 <- numerator[keep]
+    lab <- id[keep]
+    
+    if (any(yy0 < 0 | yy1 < 0))
+        stop("Negative values found: the score is defined for positive ratios only")
+    if (length(yy1) < 3)
+        stop("At least 3 valid units are needed to identify outliers")
+    
+    # excluded units
+    if (return.dataframe) {
+        excluded <- data.frame(id = id[tst],
+                               numerator = numerator[tst],
+                               denominator = denominator[tst])
+    } else {
+        excluded <- id[tst]            # integer(0)-like when nothing is excluded
     }
-    else{
-        df.no.outl <- id[tst]
-        yy0 <- denominator[!tst]
-        yy1 <- numerator[!tst]
-        lab <- id[!tst]
+    
+    # ---- derive scores --------------------------------------------------------
+    rr  <- yy1 / yy0
+    mdn <- median(rr)
+    sc  <- ifelse(rr < mdn, 1 - mdn / rr, rr / mdn - 1)
+    
+    # ---- boxplot-based fences --------------------------------------------------
+    sk <- skew.misc(x = sc)
+    message("Bowley skewness measure of centered ratios: ", round(sk[3], 4))
+    
+    aa <- boxB(x = sc, method = method, ...)
+    
+    bounds <- as.numeric(aa$fences[1:2])
+    names(bounds) <- c("lower", "upper")
+    if (anyNA(bounds) || any(is.infinite(bounds)))
+        stop("Fences could not be computed (too many identical scores?)")
+    
+    outl <- (sc < bounds[["lower"]]) | (sc > bounds[["upper"]])
+    
+    # ---- importance measure (always computed, aligned with filtered data) ----
+    imp <- if (is.null(size)) pmax(yy0, yy1)^U else size[keep]^U
+    
+    sub <- data.frame(id = lab,
+                      numerator = yy1,
+                      denominator = yy0,
+                      ratio = rr,
+                      c.ratio = sc,
+                      outliers = as.integer(outl),
+                      sizeU = imp)
+    sub <- sub[order(sub$sizeU, decreasing = TRUE), ]
+    
+    # outliers reported to the user (optionally above the size threshold)
+    sel <- sub$outliers == 1
+    if (!is.null(size.th)) sel <- sel & (sub$sizeU > size.th^U)
+    
+    if (!any(outl)) message("No outliers found")
+    
+    # ---- output ----------------------------------------------------------------
+    fine <- list(median.r = mdn, bounds = bounds, excluded = excluded)
+    
+    if (return.dataframe) {
+        fine$data <- sub
+    } else {
+        fine$outliers <- sub$id[sel]
     }
     
-    # derive scores
-    rr <- yy1/yy0
-    mdn.ratios <- median(rr)
-   
-    sc <- ifelse((rr < mdn.ratios), (1 - mdn.ratios/rr), (rr/mdn.ratios - 1))
-    
-    # computes ranges using adjusted boxplot
-    message('MedCouple skewness measure of centerad ratios: ', round(robustbase::mc(sc), 4))
-    aa <- robustbase::adjboxStats(x = sc)
-    
-    # identifies outliers
-    outl <- (sc < aa$fence[1]) | (sc > aa$fence[2])
-    
-    sub <- data.frame(id=lab,
-                      numerator=yy1,
-                      denominator=yy0,
-                      ratio=rr, c.ratio=sc, 
-                      outliers=as.integer(outl))
-    
-    if(sum(outl)==0) message('No outliers found')
-    # else{
-    #     message('No. of outliers in left tail: ', sum(sc < aa$fence[1]))
-    #     message('No. of outliers in right tail: ', sum(sc > aa$fence[2]), '\n')
-    # }
-    
-    # output 
-    
-    fine0 <- list(median.r=mdn.ratios, bounds = c(aa$fence))
-    
-    if(return.dataframe){
-        df.no.outl <- data.frame(id=id[tst],
-                              numerator=numerator[tst],
-                              denominator=denominator[tst])
-    }
-    # when no outliers are found
-    if(sum(outl)==0){
-        if(return.dataframe){
-            fine <- c(fine0, list(excluded=df.no.outl, data=sub))
-        }
-        else{
-            fine <- c(fine0, list(excluded=df.no.outl, 
-                         outliers=integer(0)))    
-        } 
-
-    }
-    # output when outliers are found
-    # importance measure 'size' is considered 
-    # when available also a threshold 'size.th'
-    else{
-        if(is.null(size) ) imp <- pmax(yy0, yy1) ^ U
-        else imp <- size^U
-        sub$sizeU <- imp
-        sub <- sub[order(imp, decreasing=TRUE), ]
-        # sub <- sub[sub$outlier, ]
-        
-        if(!is.null(size.th)) {
-            sub <- sub[((sub$sizeU > (size.th^U)) & (sub$outliers==1)), ]
-        }
-        if(return.dataframe){
-            fine <- c(fine0, list(excluded=df.no.outl, 
-                         data=sub))
-        }
-        else {
-            fine <- c(fine0, list(excluded=df.no.outl, 
-                     outliers=sub$id[sub$outliers==1]))
-        }
-    }
-    c(fine, call=match.call())
+    c(fine, list(call = match.call()))
 }
